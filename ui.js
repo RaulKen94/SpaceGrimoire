@@ -56,7 +56,18 @@
     // ---------- SCHERMATE ----------
     function renderShip(s) {
         var wrap = el('div', 'screen ship');
-        wrap.appendChild(el('h1', null, '🚀 Nave Spaziale'));
+        
+        var header = el('div', 'ship-header');
+        header.appendChild(el('h1', null, '🚀 Nave Spaziale'));
+        
+        var btnEquip = el('button', 'secondary-btn', '🎒 Equipaggiamento');
+        btnEquip.addEventListener('click', function() {
+            NS.Game.openEquipment();
+            render();
+        });
+        header.appendChild(btnEquip);
+        
+        wrap.appendChild(header);
         wrap.appendChild(el('p', 'subtitle', 'Scegli la tua prossima destinazione.'));
 
         var dungeons = el('div', 'dungeon-list');
@@ -75,6 +86,57 @@
             dungeons.appendChild(cardEl);
         });
         wrap.appendChild(dungeons);
+        return wrap;
+    }
+
+    function renderEquipment(s) {
+        var wrap = el('div', 'screen equipment');
+        wrap.appendChild(el('h1', null, '🎒 Equipaggiamento Base'));
+
+        var grid = el('div', 'equipment-grid');
+
+        NS.EQUIPMENT_SLOTS.forEach(function(slot) {
+            var slotBox = el('div', 'equipment-slot');
+            
+            slotBox.appendChild(el('div', 'slot-name', slot.name));
+            
+            var info = el('div', 'slot-info');
+            info.textContent = slot.combatCount + ' Combattimento / ' + slot.dungeonCount + ' Dungeon';
+            slotBox.appendChild(info);
+
+            var cardList = el('div', 'slot-cards');
+            slot.cards.forEach(function(cardId) {
+                // Trova la carta nel mazzo Combat
+                var cCard = NS.COMBAT_CARDS.find(function(c) { return c.id === cardId; });
+                if (cCard) {
+                    var type = cCard.damage ? 'attack' : (cCard.shield ? 'defense' : 'utility');
+                    var miniCard = el('div', 'mini-card ' + type);
+                    miniCard.innerHTML = '<strong>' + cCard.name + '</strong><br>' + cardEffects(cCard);
+                    cardList.appendChild(miniCard);
+                }
+
+                // Trova la carta nel mazzo Dungeon
+                var dCard = NS.DUNGEON_CARDS.find(function(c) { return c.id === cardId; });
+                if (dCard) {
+                    var miniCard = el('div', 'mini-card movement');
+                    miniCard.innerHTML = '<strong>' + dCard.name + '</strong><br>' + cardEffects(dCard);
+                    cardList.appendChild(miniCard);
+                }
+            });
+            slotBox.appendChild(cardList);
+
+            grid.appendChild(slotBox);
+        });
+
+        wrap.appendChild(grid);
+
+        var btnBack = el('button', 'primary-btn', 'Torna alla nave');
+        btnBack.addEventListener('click', function() {
+            NS.Game.closeEquipment();
+            render();
+        });
+        wrap.appendChild(btnBack);
+
         return wrap;
     }
 
@@ -180,21 +242,20 @@
 
         var screen;
         switch (s.screen) {
-            case 'ship':     screen = renderShip(s); break;
-            case 'movement': screen = renderMovement(s); break;
-            case 'combat':   screen = renderCombat(s); break;
-            case 'gameover': screen = renderGameOver(s); break;
-            case 'victory':  screen = renderVictory(s); break;
-            default:         screen = el('div', null, 'Schermata sconosciuta: ' + s.screen);
+            case 'ship':      screen = renderShip(s); break;
+            case 'equipment': screen = renderEquipment(s); break;
+            case 'movement':  screen = renderMovement(s); break;
+            case 'combat':    screen = renderCombat(s); break;
+            case 'gameover':  screen = renderGameOver(s); break;
+            case 'victory':   screen = renderVictory(s); break;
+            default:          screen = el('div', null, 'Schermata sconosciuta: ' + s.screen);
         }
         container.appendChild(screen);
 
         app.appendChild(container);
     }
 
-    // Esporta le funzioni UI nel namespace
     NS.UI = {
         render: render
     };
-
 })();
