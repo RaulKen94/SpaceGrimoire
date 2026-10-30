@@ -1,0 +1,175 @@
+:root {
+  --bg: #0a0a1a;
+  --bg2: #12122a;
+  --panel: #16162a;
+  --border: #2a2a4a;
+  --fg: #e8e8f0;
+  --muted: #8888a0;
+  --accent: #64b5f6;
+  --attack: #ef5350;
+  --defense: #42a5f5;
+  --movement: #66bb6a;
+  --utility: #ab47bc;
+  --gold: #ffd54f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+.container { max-width: 960px; margin: 0 auto; }
+
+h1, h2 { margin-top: 0; color: var(--accent); }
+.subtitle { color: var(--muted); margin-top: -8px; }
+
+/* HUD */
+.hud {
+  display: flex;
+  gap: 24px;
+  padding: 12px 18px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+.hud-item { font-weight: 500; }
+
+/* Schermate */
+.screen {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
+  min-height: 300px;
+}
+
+/* Ship */
+.dungeon-list { display: flex; gap: 16px; margin-top: 16px; }
+.dungeon-card {
+  flex: 1;
+  padding: 20px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.dungeon-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+.dungeon-title { font-size: 20px; font-weight: bold; margin-bottom: 12px; }
+.dungeon-info { color: var(--muted); font-size: 14px; margin: 4px 0; }
+.dungeon-reward { color: var(--gold); font-size: 14px; margin-top: 10px; font-weight: 500; }
+
+/* Mano / Carte */
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+  min-height: 140px;
+}
+.empty { color: var(--muted); font-style: italic; align-self: center; }
+
+.card {
+  width: 120px;
+  min-height: 130px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+  transition: transform 0.1s, border-color 0.1s;
+  user-select: none;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.card.attack   { border-color: var(--attack); }
+.card.defense  { border-color: var(--defense); }
+.card.movement { border-color: var(--movement); }
+.card.utility  { border-color: var(--utility); }
+
+.card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.card.disabled:hover { transform: none; }
+
+.card-name { font-weight: bold; color: var(--fg); }
+.card-effects { font-size: 14px; letter-spacing: 2px; }
+
+/* Combat */
+.enemy-box {
+  background: var(--bg2);
+  border: 1px solid var(--attack);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.enemy-name { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+.enemy-hp { color: var(--muted); }
+
+.combat-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px;
+  background: var(--bg2);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.combat-stats .stat { font-size: 14px; }
+
+/* Bottoni */
+button.primary-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.15s;
+  margin-top: 8px;
+}
+button.primary-btn:hover:not(:disabled) { background: #90caf9; }
+button.primary-btn:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* Log */
+.log {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 13px;
+  font-family: 'Consolas', monospace;
+  color: var(--muted);
+}
+.log-line { padding: 2px 0; }
+
+/* Gameover / Victory */
+.gameover { border-color: var(--attack); }
+.victory { border-color: var(--gold); }
