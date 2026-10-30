@@ -56,6 +56,11 @@
         state.screen = 'ship';
         state.log = [];
         addLog('Benvenuto a bordo. Seleziona un dungeon.');
+
+        // Innesca il primo render della UI
+        if (NS.UI && NS.UI.render) {
+            NS.UI.render();
+        }
     }
 
     function goToShip() {
