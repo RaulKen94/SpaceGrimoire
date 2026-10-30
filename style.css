@@ -53,6 +53,11 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 }
 
 /* Ship */
+.ship-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .dungeon-list { display: flex; gap: 16px; margin-top: 16px; }
 .dungeon-card {
   flex: 1;
@@ -70,6 +75,41 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 .dungeon-title { font-size: 20px; font-weight: bold; margin-bottom: 12px; }
 .dungeon-info { color: var(--muted); font-size: 14px; margin: 4px 0; }
 .dungeon-reward { color: var(--gold); font-size: 14px; margin-top: 10px; font-weight: 500; }
+
+/* Equipaggiamento */
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.equipment-slot {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.slot-name { font-size: 18px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+.slot-info { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.slot-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mini-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 11px;
+  width: calc(50% - 4px);
+  min-width: 100px;
+}
+.mini-card.attack { border-left: 3px solid var(--attack); }
+.mini-card.defense { border-left: 3px solid var(--defense); }
+.mini-card.movement { border-left: 3px solid var(--movement); }
+.mini-card.utility { border-left: 3px solid var(--utility); }
+.mini-card strong { display: block; margin-bottom: 4px; color: var(--fg); }
 
 /* Mano / Carte */
 .hand {
@@ -137,38 +177,33 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 .combat-stats .stat { font-size: 14px; }
 
 /* Bottoni */
-button.primary-btn {
+button.primary-btn, button.secondary-btn {
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--bg);
-  background: var(--accent);
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.15s;
+}
+button.primary-btn {
+  color: var(--bg);
+  background: var(--accent);
   margin-top: 8px;
 }
+button.secondary-btn {
+  color: var(--accent);
+  background: transparent;
+  border: 2px solid var(--accent);
+  margin: 0;
+}
 button.primary-btn:hover:not(:disabled) { background: #90caf9; }
+button.secondary-btn:hover { background: rgba(100, 181, 246, 0.1); }
 button.primary-btn:disabled {
   background: var(--border);
   color: var(--muted);
   cursor: not-allowed;
 }
-
-/* Log */
-.log {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  max-height: 140px;
-  overflow-y: auto;
-  font-size: 13px;
-  font-family: 'Consolas', monospace;
-  color: var(--muted);
-}
-.log-line { padding: 2px 0; }
 
 /* Gameover / Victory */
 .gameover { border-color: var(--attack); }
