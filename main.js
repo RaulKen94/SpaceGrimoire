@@ -2,12 +2,8 @@
     window.SpaceGrimoire = window.SpaceGrimoire || {};
     var NS = window.SpaceGrimoire;
 
-    // ---------- AVVIO ----------
+    // Avvia la partita al caricamento del DOM
     document.addEventListener('DOMContentLoaded', function() {
-        // Inizializza lo stato del gioco
         NS.Game.startGame();
-        
-        // Disegna la prima schermata
-        NS.UI.render();
     });
 })();
