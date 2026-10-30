@@ -19,7 +19,6 @@
         screen: 'ship',
         hearts: NS.CONSTANTS.STARTING_HEARTS,
         credits: 0,
-        log: [],
         dungeon: null,
         combatIndex: 0,
 
@@ -42,11 +41,6 @@
         buffer: 0
     };
 
-    function addLog(msg) {
-        state.log.push(msg);
-        if (state.log.length > 10) state.log.shift();
-    }
-
     // ---------- FLUSSO RUN ----------
     function startGame() {
         state.hearts = NS.CONSTANTS.STARTING_HEARTS;
@@ -54,10 +48,7 @@
         state.dungeon = null;
         state.combatIndex = 0;
         state.screen = 'ship';
-        state.log = [];
-        addLog('Benvenuto a bordo. Seleziona un dungeon.');
 
-        // Innesca il primo render della UI
         if (NS.UI && NS.UI.render) {
             NS.UI.render();
         }
@@ -66,7 +57,6 @@
     function goToShip() {
         state.screen = 'ship';
         state.dungeon = null;
-        state.log = [];
     }
 
     // ---------- DUNGEON ----------
@@ -76,13 +66,11 @@
         
         state.dungeon = Object.assign({}, template, { starLevel: starLevel });
         state.combatIndex = 0;
-        state.log = [];
         state.mDeck = shuffle(NS.DUNGEON_CARDS);
         state.mDiscard = [];
         state.mHand = [];
         state.mSum = 0;
         
-        addLog('Entri nel dungeon ' + starLevel + '★: ' + template.combats + ' combattimenti, soglia movimento ' + template.threshold + '.');
         startMovement();
     }
 
@@ -92,15 +80,13 @@
         state.mHand = [];
         state.mSum = 0;
         drawMovement(NS.CONSTANTS.MOVEMENT_DRAW);
-        addLog('Settore ' + (state.combatIndex + 1) + '/' + state.dungeon.combats + ': serve ' + state.dungeon.threshold + ' movimento.');
     }
 
     function drawMovement(n) {
         for (var i = 0; i < n; i++) {
             if (state.mDeck.length === 0) {
                 if (state.mDiscard.length === 0) {
-                    addLog('Nessuna carta disponibile per il movimento.');
-                    continue;
+                    continue; // Se non c'è nulla da pescare, esce dal ciclo
                 }
                 state.mDeck = shuffle(state.mDiscard);
                 state.mDiscard = [];
@@ -119,13 +105,9 @@
         
         if (card.draw) drawMovement(card.draw);
 
+        // Auto-pesca se la mano è vuota ma non hai raggiunto la soglia
         if (state.mHand.length === 0 && state.mSum < state.dungeon.threshold) {
-            var before = state.mHand.length;
             drawMovement(NS.CONSTANTS.MOVEMENT_DRAW);
-            if (state.mHand.length === before) {
-                addLog('Impossibile proseguire — avanzi per fortuna.');
-                advanceToCombat();
-            }
         }
     }
 
@@ -136,7 +118,6 @@
     function advanceToCombat() {
         if (!canAdvanceMovement()) return;
         
-        // Scarta la mano residua
         for (var i = 0; i < state.mHand.length; i++) {
             state.mDiscard.push(state.mHand[i]);
         }
@@ -171,7 +152,6 @@
         state.cDiscard = [];
         state.cHand = [];
 
-        addLog('Combattimento ' + (state.combatIndex + 1) + '/' + state.dungeon.combats + ': ' + state.enemy.name + ' (' + state.enemy.hp + ' PV, ' + state.enemy.damage + ' dmg).');
         startTurn();
     }
 
@@ -186,8 +166,6 @@
         drawCombat(pattern.draw);
 
         if (state.playerHP <= 0) { loseCombat(); return; }
-
-        addLog('Turno ' + (state.turn + 1) + ': peschi ' + pattern.draw + ', puoi giocare fino a ' + state.playLimit + '.');
     }
 
     function drawCombat(n) {
@@ -195,7 +173,6 @@
             if (state.cDeck.length === 0) {
                 if (state.cDiscard.length === 0) {
                     state.playerHP = Math.max(0, state.playerHP - 1);
-                    addLog('Pesca impossibile! -1 PV.');
                     continue;
                 }
                 state.cDeck = shuffle(state.cDiscard);
@@ -212,7 +189,7 @@
     function playCombatCard(index) {
         if (state.screen !== 'combat') return;
         if (index < 0 || index >= state.cHand.length) return;
-        if (!canPlayCard()) { addLog('Limite di giocate raggiunto per questo turno.'); return; }
+        if (!canPlayCard()) return;
 
         var card = state.cHand[index];
         state.cHand.splice(index, 1);
@@ -241,7 +218,6 @@
         var hpLoss = dmg - absorbed;
         
         state.playerHP = Math.max(0, state.playerHP - hpLoss);
-        addLog(state.enemy.name + ' attacca: ' + hpLoss + ' danni (scudo assorbe ' + absorbed + ').');
         state.playerShield = 0;
 
         if (state.playerHP <= 0) { loseCombat(); return; }
@@ -251,7 +227,6 @@
     }
 
     function winCombat() {
-        addLog(state.enemy.name + ' sconfitto!');
         state.combatIndex++;
         if (state.combatIndex >= state.dungeon.combats) {
             completeDungeon();
@@ -262,7 +237,6 @@
 
     function loseCombat() {
         state.hearts--;
-        addLog('Combattimento perso! Cuori rimasti: ' + state.hearts + '.');
         if (state.hearts <= 0) {
             state.screen = 'gameover';
         } else {
@@ -273,14 +247,12 @@
 
     function completeDungeon() {
         state.credits += state.dungeon.credits;
-        addLog('Dungeon completato! +' + state.dungeon.credits + ' crediti.');
         state.screen = 'victory';
     }
 
     function leaveVictoryScreen() {
         state.screen = 'ship';
         state.dungeon = null;
-        state.log = [];
     }
 
     // ---------- EXPORT ----------
@@ -295,7 +267,6 @@
         playCombatCard: playCombatCard,
         endTurn: endTurn,
         canPlayCard: canPlayCard,
-        leaveVictoryScreen: leaveVictoryScreen,
-        addLog: addLog
+        leaveVictoryScreen: leaveVictoryScreen
     };
 })();
