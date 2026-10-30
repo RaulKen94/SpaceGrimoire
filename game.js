@@ -2,7 +2,6 @@
     window.SpaceGrimoire = window.SpaceGrimoire || {};
     var NS = window.SpaceGrimoire;
 
-    // ---------- UTIL ----------
     function shuffle(array) {
         var arr = array.slice();
         for (var i = arr.length - 1; i > 0; i--) {
@@ -14,7 +13,6 @@
         return arr;
     }
 
-    // ---------- STATE ----------
     var state = {
         screen: 'ship',
         hearts: NS.CONSTANTS.STARTING_HEARTS,
@@ -22,13 +20,11 @@
         dungeon: null,
         combatIndex: 0,
 
-        // Movimento
         mDeck: [],
         mDiscard: [],
         mHand: [],
         mSum: 0,
 
-        // Combattimento
         playerHP: NS.CONSTANTS.PLAYER_MAX_HP,
         playerShield: 0,
         enemy: null,
@@ -41,7 +37,6 @@
         buffer: 0
     };
 
-    // ---------- FLUSSO RUN ----------
     function startGame() {
         state.hearts = NS.CONSTANTS.STARTING_HEARTS;
         state.credits = 0;
@@ -49,24 +44,28 @@
         state.combatIndex = 0;
         state.screen = 'ship';
 
-        if (NS.UI && NS.UI.render) {
-            NS.UI.render();
-        }
+        if (NS.UI && NS.UI.render) NS.UI.render();
     }
 
-    function goToShip() {
+    function openEquipment() {
+        state.screen = 'equipment';
+    }
+
+    function closeEquipment() {
         state.screen = 'ship';
-        state.dungeon = null;
     }
 
-    // ---------- DUNGEON ----------
     function enterDungeon(starLevel) {
         var template = NS.DUNGEONS[starLevel];
         if (!template) return;
         
         state.dungeon = Object.assign({}, template, { starLevel: starLevel });
         state.combatIndex = 0;
-        state.mDeck = shuffle(NS.DUNGEON_CARDS);
+        
+        // Genera i mazzi di default
+        var decks = NS.Items.getDefaultDecks();
+        
+        state.mDeck = shuffle(decks.dungeon);
         state.mDiscard = [];
         state.mHand = [];
         state.mSum = 0;
@@ -74,7 +73,6 @@
         startMovement();
     }
 
-    // ---------- MOVIMENTO ----------
     function startMovement() {
         state.screen = 'movement';
         state.mHand = [];
@@ -85,9 +83,7 @@
     function drawMovement(n) {
         for (var i = 0; i < n; i++) {
             if (state.mDeck.length === 0) {
-                if (state.mDiscard.length === 0) {
-                    continue; // Se non c'è nulla da pescare, esce dal ciclo
-                }
+                if (state.mDiscard.length === 0) continue;
                 state.mDeck = shuffle(state.mDiscard);
                 state.mDiscard = [];
             }
@@ -105,7 +101,6 @@
         
         if (card.draw) drawMovement(card.draw);
 
-        // Auto-pesca se la mano è vuota ma non hai raggiunto la soglia
         if (state.mHand.length === 0 && state.mSum < state.dungeon.threshold) {
             drawMovement(NS.CONSTANTS.MOVEMENT_DRAW);
         }
@@ -125,13 +120,11 @@
         startCombat();
     }
 
-    // ---------- COMBATTIMENTO ----------
     function getTurnPattern(turn) {
         if (turn === 0) return { draw: 3, play: 2 };
         if (turn === 1) return { draw: 1, play: 1 };
         if (turn === 2) return { draw: 3, play: 2 };
         if (turn === 3) return { draw: 2, play: 2 };
-        
         if (turn % 2 === 0) return { draw: 3, play: 2 };
         return { draw: 2, play: 2 };
     }
@@ -148,7 +141,9 @@
         var template = pool[Math.floor(Math.random() * pool.length)];
         state.enemy = { name: template.name, hp: template.hp, maxHp: template.hp, damage: template.damage };
 
-        state.cDeck = shuffle(NS.COMBAT_CARDS);
+        // Usa le carte combat di default
+        var decks = NS.Items.getDefaultDecks();
+        state.cDeck = shuffle(decks.combat);
         state.cDiscard = [];
         state.cHand = [];
 
@@ -164,8 +159,7 @@
         state.playedThisTurn = 0;
         
         drawCombat(pattern.draw);
-
-        if (state.playerHP <= 0) { loseCombat(); return; }
+        if (state.playerHP <= 0) loseCombat();
     }
 
     function drawCombat(n) {
@@ -187,8 +181,7 @@
     }
 
     function playCombatCard(index) {
-        if (state.screen !== 'combat') return;
-        if (index < 0 || index >= state.cHand.length) return;
+        if (state.screen !== 'combat' || index < 0 || index >= state.cHand.length) return;
         if (!canPlayCard()) return;
 
         var card = state.cHand[index];
@@ -255,11 +248,11 @@
         state.dungeon = null;
     }
 
-    // ---------- EXPORT ----------
     NS.Game = {
         state: state,
         startGame: startGame,
-        goToShip: goToShip,
+        openEquipment: openEquipment,
+        closeEquipment: closeEquipment,
         enterDungeon: enterDungeon,
         playMovementCard: playMovementCard,
         canAdvanceMovement: canAdvanceMovement,
