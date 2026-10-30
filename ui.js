@@ -78,7 +78,7 @@
             
             cardEl.addEventListener('click', function() {
                 NS.Game.enterDungeon(star);
-                render(); // Richiama la funzione globale in questo file
+                render();
             });
             dungeons.appendChild(cardEl);
         });
@@ -157,8 +157,8 @@
         wrap.appendChild(el('p', null, 'Hai esaurito i cuori. I crediti raccolti sono persi nel vuoto.'));
         var btn = el('button', 'primary-btn', 'Ricomincia da capo');
         btn.addEventListener('click', function() {
-            NS.Game.startGame();
-            render();
+            // startGame chiamerà internamente NS.UI.render()
+            NS.Game.startGame(); 
         });
         wrap.appendChild(btn);
         return wrap;
