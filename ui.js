@@ -53,14 +53,6 @@
         return hud;
     }
 
-    function renderLog(s) {
-        var log = el('div', 'log');
-        for (var i = 0; i < s.log.length; i++) {
-            log.appendChild(el('div', 'log-line', '› ' + s.log[i]));
-        }
-        return log;
-    }
-
     // ---------- SCHERMATE ----------
     function renderShip(s) {
         var wrap = el('div', 'screen ship');
@@ -157,7 +149,6 @@
         wrap.appendChild(el('p', null, 'Hai esaurito i cuori. I crediti raccolti sono persi nel vuoto.'));
         var btn = el('button', 'primary-btn', 'Ricomincia da capo');
         btn.addEventListener('click', function() {
-            // startGame chiamerà internamente NS.UI.render()
             NS.Game.startGame(); 
         });
         wrap.appendChild(btn);
@@ -197,7 +188,6 @@
             default:         screen = el('div', null, 'Schermata sconosciuta: ' + s.screen);
         }
         container.appendChild(screen);
-        container.appendChild(renderLog(s));
 
         app.appendChild(container);
     }
