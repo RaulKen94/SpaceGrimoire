@@ -15,7 +15,7 @@
         if (card.damage) parts.push('⚔️' + card.damage);
         if (card.shield) parts.push('🛡️' + card.shield);
         if (card.movement !== undefined && card.movement !== null) parts.push('👟' + card.movement);
-        if (card.draw) parts.push('🃏' + card.draw);
+        if (card.draw) parts.push('🔼' + card.draw); // Modificato da 🃏 a 🔼
         return parts.join(' ');
     }
 
@@ -46,9 +46,14 @@
         var hud = el('div', 'hud');
         hud.appendChild(el('div', 'hud-item', '❤️ ' + s.hearts));
         hud.appendChild(el('div', 'hud-item', '💳 ' + s.credits));
+        
         if (s.dungeon) {
             hud.appendChild(el('div', 'hud-item', '⭐ ' + s.dungeon.starLevel + '★'));
             hud.appendChild(el('div', 'hud-item', 'Combattimento ' + (s.combatIndex + 1) + '/' + s.dungeon.combats));
+            
+            // Contatori Mazzo e Scarti
+            hud.appendChild(el('div', 'hud-item', '👟 M: ' + s.mDeck.length + ' | S: ' + s.mDiscard.length));
+            hud.appendChild(el('div', 'hud-item', '⚔️ M: ' + s.cDeck.length + ' | S: ' + s.cDiscard.length));
         }
         return hud;
     }
