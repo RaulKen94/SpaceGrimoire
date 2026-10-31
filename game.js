@@ -65,10 +65,16 @@
         // Genera i mazzi di default
         var decks = NS.Items.getDefaultDecks();
         
+        // Inizializza e resetta il mazzo Dungeon
         state.mDeck = shuffle(decks.dungeon);
         state.mDiscard = [];
         state.mHand = [];
         state.mSum = 0;
+        
+        // Inizializza e resetta il mazzo Combat
+        state.cDeck = shuffle(decks.combat);
+        state.cDiscard = [];
+        state.cHand = [];
         
         startMovement();
     }
@@ -141,7 +147,7 @@
         var template = pool[Math.floor(Math.random() * pool.length)];
         state.enemy = { name: template.name, hp: template.hp, maxHp: template.hp, damage: template.damage };
 
-        // Usa le carte combat di default
+        // Usa le carte combat di default per il nuovo combattimento
         var decks = NS.Items.getDefaultDecks();
         state.cDeck = shuffle(decks.combat);
         state.cDiscard = [];
