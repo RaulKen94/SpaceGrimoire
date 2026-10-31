@@ -57,18 +57,15 @@
     function renderShip(s) {
         var wrap = el('div', 'screen ship');
         
-        var header = el('div', 'ship-header');
-        header.appendChild(el('h1', null, '🚀 Nave Spaziale'));
+        wrap.appendChild(el('h1', null, '🚀 Nave Spaziale'));
+        wrap.appendChild(el('p', 'subtitle', 'Scegli la tua prossima destinazione.'));
         
         var btnEquip = el('button', 'secondary-btn', '🎒 Equipaggiamento');
         btnEquip.addEventListener('click', function() {
             NS.Game.openEquipment();
             render();
         });
-        header.appendChild(btnEquip);
-        
-        wrap.appendChild(header);
-        wrap.appendChild(el('p', 'subtitle', 'Scegli la tua prossima destinazione.'));
+        wrap.appendChild(btnEquip);
 
         var dungeons = el('div', 'dungeon-list');
         [1, 2].forEach(function(star) {
@@ -106,7 +103,6 @@
 
             var cardList = el('div', 'slot-cards');
             slot.cards.forEach(function(cardId) {
-                // Trova la carta nel mazzo Combat
                 var cCard = NS.COMBAT_CARDS.find(function(c) { return c.id === cardId; });
                 if (cCard) {
                     var type = cCard.damage ? 'attack' : (cCard.shield ? 'defense' : 'utility');
@@ -115,7 +111,6 @@
                     cardList.appendChild(miniCard);
                 }
 
-                // Trova la carta nel mazzo Dungeon
                 var dCard = NS.DUNGEON_CARDS.find(function(c) { return c.id === cardId; });
                 if (dCard) {
                     var miniCard = el('div', 'mini-card movement');
