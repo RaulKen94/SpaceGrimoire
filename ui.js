@@ -91,7 +91,7 @@
 
     function renderEquipment(s) {
         var wrap = el('div', 'screen equipment');
-        wrap.appendChild(el('h1', null, '🎒 Equipaggiamento Base'));
+        wrap.appendChild(el('h1', null, '🎒 Equipaggiamento'));
 
         var grid = el('div', 'equipment-grid');
 
@@ -111,7 +111,7 @@
                 if (cCard) {
                     var type = cCard.damage ? 'attack' : (cCard.shield ? 'defense' : 'utility');
                     var miniCard = el('div', 'mini-card ' + type);
-                    miniCard.innerHTML = '<strong>' + cCard.name + '</strong><br>' + cardEffects(cCard);
+                    miniCard.innerHTML = '<strong>' + cCard.name + '</strong><div class="mini-effects">' + cardEffects(cCard) + '</div>';
                     cardList.appendChild(miniCard);
                 }
 
@@ -119,7 +119,7 @@
                 var dCard = NS.DUNGEON_CARDS.find(function(c) { return c.id === cardId; });
                 if (dCard) {
                     var miniCard = el('div', 'mini-card movement');
-                    miniCard.innerHTML = '<strong>' + dCard.name + '</strong><br>' + cardEffects(dCard);
+                    miniCard.innerHTML = '<strong>' + dCard.name + '</strong><div class="mini-effects">' + cardEffects(dCard) + '</div>';
                     cardList.appendChild(miniCard);
                 }
             });
