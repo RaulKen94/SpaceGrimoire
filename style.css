@@ -84,7 +84,7 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 .dungeon-info { color: var(--muted); font-size: 14px; margin: 4px 0; }
 .dungeon-reward { color: var(--gold); font-size: 14px; margin-top: 10px; font-weight: 500; }
 
-/* Equipaggiamento (Mini-carte con sfondi colorati) */
+/* Equipaggiamento (Mini-carte) */
 .equipment-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -145,81 +145,77 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 }
 .empty { color: var(--muted); font-style: italic; align-self: center; }
 
-/* DESIGN DELLE CARTE (Sci-Fi con sfondi colorati) */
+/* DESIGN DELLE CARTE (Stile MTG Classico) */
 .card {
   width: 130px;
-  height: 160px;
-  border-radius: 12px;
-  background: linear-gradient(145deg, var(--bg2) 0%, #1e1e3a 100%); /* Default */
-  border: 1px solid var(--border);
-  border-top: 4px solid var(--accent);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255,255,255,0.02);
+  height: 170px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--bg2) 0%, #1e1e3a 100%);
+  
+  /* Bordo esterno nero spesso */
+  border: 4px solid #111; 
+  /* Ombra esterna + linea interna sottile metallica */
+  box-shadow: 0 0 0 1px #555, 0 6px 12px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0,0,0,0.5);
+  
   cursor: pointer;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   user-select: none;
+  padding: 4px;
 }
 
 .card:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent);
+  box-shadow: 0 0 0 1px #999, 0 10px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0,0,0,0.6);
 }
 
-/* Applicazione sfondo e bordo in base al tipo */
-.card.attack { 
-  background: linear-gradient(145deg, rgba(239, 83, 80, 0.25) 0%, var(--bg2) 100%);
-  border-top-color: var(--attack); 
-}
-.card.defense { 
-  background: linear-gradient(145deg, rgba(66, 165, 245, 0.25) 0%, var(--bg2) 100%);
-  border-top-color: var(--defense); 
-}
-.card.movement { 
-  background: linear-gradient(145deg, rgba(102, 187, 106, 0.25) 0%, var(--bg2) 100%);
-  border-top-color: var(--movement); 
-}
-.card.utility { 
-  background: linear-gradient(145deg, rgba(171, 71, 188, 0.25) 0%, var(--bg2) 100%);
-  border-top-color: var(--utility); 
-}
+/* Colori in base al tipo */
+.card.attack   { background: linear-gradient(180deg, rgba(239, 83, 80, 0.4) 0%, var(--bg2) 100%); }
+.card.defense  { background: linear-gradient(180deg, rgba(66, 165, 245, 0.4) 0%, var(--bg2) 100%); }
+.card.movement { background: linear-gradient(180deg, rgba(102, 187, 106, 0.4) 0%, var(--bg2) 100%); }
+.card.utility  { background: linear-gradient(180deg, rgba(171, 71, 188, 0.4) 0%, var(--bg2) 100%); }
 
-/* Effetti Glow all'hover in base al tipo */
-.card.attack:hover   { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px var(--attack); }
-.card.defense:hover  { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px var(--defense); }
-.card.movement:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px var(--movement); }
-.card.utility:hover  { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px var(--utility); }
-
-.card.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  filter: grayscale(80%);
-}
-.card.disabled:hover { 
-  transform: none; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
+/* Banner del Nome (Stile MTG) */
 .card-name { 
   font-weight: 700; 
   color: var(--fg); 
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 10px 10px 5px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
   text-align: center;
+  margin-bottom: 4px;
+  text-shadow: 1px 1px 2px #000;
 }
+
+/* Riquadro del Testo / Effetti */
 .card-effects { 
-  font-size: 22px; 
+  font-size: 18px; 
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  gap: 5px;
-  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  text-shadow: 1px 1px 2px #000;
+  margin: 0;
+}
+
+.card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+.card.disabled:hover { 
+  transform: none; 
+  box-shadow: 0 0 0 1px #555, 0 6px 12px rgba(0, 0, 0, 0.7);
 }
 
 /* Combat */
@@ -333,16 +329,16 @@ button.primary-btn:disabled {
   .card {
     width: calc(50% - 8px); 
     max-width: 140px;
-    height: 140px;
+    height: 160px; /* Leggermente più basse per mobile, ma adatte al nuovo stile */
   }
 
   .card-name {
-    font-size: 11px;
-    padding: 8px 5px 4px 5px;
+    font-size: 10px;
+    padding: 4px;
   }
 
   .card-effects {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   button.primary-btn, button.secondary-btn {
