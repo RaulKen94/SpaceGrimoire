@@ -27,7 +27,13 @@ body {
 .container { max-width: 960px; margin: 0 auto; }
 
 h1, h2 { margin-top: 0; color: var(--accent); }
-.subtitle { color: var(--muted); margin-top: -8px; }
+
+/* Il sottotitolo ora ha un margine normale e pulito */
+.subtitle { 
+  color: var(--muted); 
+  margin-top: -10px; 
+  margin-bottom: 20px; 
+}
 
 /* HUD */
 .hud {
@@ -52,14 +58,15 @@ h1, h2 { margin-top: 0; color: var(--accent); }
   min-height: 300px;
 }
 
-/* Ship */
-.ship-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+/* Bottone equipaggiamento (ora posizionato sotto il sottotitolo) */
+.secondary-btn {
+  color: var(--accent);
+  background: transparent;
+  border: 2px solid var(--accent);
+  margin-bottom: 24px;
 }
+
+/* Ship */
 .dungeon-list { display: flex; gap: 16px; margin-top: 16px; }
 .dungeon-card {
   flex: 1;
@@ -127,7 +134,7 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 }
 .empty { color: var(--muted); font-style: italic; align-self: center; }
 
-/* NUOVO DESIGN DELLE CARTE (Sci-Fi / Olografico) */
+/* DESIGN DELLE CARTE (Sci-Fi / Olografico) */
 .card {
   width: 130px;
   height: 160px;
@@ -145,13 +152,11 @@ h1, h2 { margin-top: 0; color: var(--accent); }
   user-select: none;
 }
 
-/* Effetto glow al passaggio del mouse */
 .card:hover {
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent);
 }
 
-/* Colori in base al tipo */
 .card.attack   { border-top-color: var(--attack); }
 .card.defense  { border-top-color: var(--defense); }
 .card.movement { border-top-color: var(--movement); }
@@ -215,7 +220,7 @@ h1, h2 { margin-top: 0; color: var(--accent); }
 }
 .combat-stats .stat { font-size: 14px; }
 
-/* Bottoni */
+/* Bottoni Base */
 button.primary-btn, button.secondary-btn {
   padding: 14px 24px;
   font-size: 16px;
@@ -234,7 +239,7 @@ button.secondary-btn {
   color: var(--accent);
   background: transparent;
   border: 2px solid var(--accent);
-  margin: 0;
+  margin: 0 0 20px 0;
 }
 button.primary-btn:hover:not(:disabled) { background: #90caf9; }
 button.secondary-btn:hover { background: rgba(100, 181, 246, 0.1); }
@@ -249,7 +254,7 @@ button.primary-btn:disabled {
 .victory { border-color: var(--gold); }
 
 /* =========================================
-   MEDIA QUERY PER MOBILE E TABLET
+   MEDIA QUERY OTTIMIZZATE PER MOBILE
    ========================================= */
 @media (max-width: 768px) {
   body {
@@ -260,33 +265,40 @@ button.primary-btn:disabled {
     padding: 16px;
   }
 
+  /* Ridimensioniamo i titoli per non farli esplodere su mobile */
+  h1 { font-size: 1.6rem; margin-bottom: 10px; }
+  h2 { font-size: 1.3rem; }
+  
+  .subtitle {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+
   .hud {
     flex-wrap: wrap;
     gap: 12px;
     padding: 10px;
     font-size: 14px;
-  }
-
-  .ship-header {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-
-  .ship-header button {
-    margin-top: 10px;
+    justify-content: center;
   }
 
   .dungeon-list {
     flex-direction: column;
+    gap: 12px;
   }
+
+  .dungeon-title { font-size: 18px; margin-bottom: 8px; }
+  .dungeon-info { font-size: 13px; }
+  .dungeon-reward { font-size: 13px; margin-top: 8px; }
 
   .equipment-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .mini-card {
-    width: 100%; /* Su mobile le mini-carte occupano tutta la riga */
+    width: 100%;
   }
 
   .hand {
@@ -294,19 +306,25 @@ button.primary-btn:disabled {
     justify-content: center;
   }
 
+  /* Carte a 2 colonne su mobile */
   .card {
-    width: calc(50% - 8px); /* Due carte per riga su schermi piccoli */
+    width: calc(50% - 8px); 
     max-width: 140px;
-    height: 150px;
+    height: 140px; /* Leggermente più basse */
+  }
+
+  .card-name {
+    font-size: 11px;
+    padding: 8px 5px 4px 5px;
   }
 
   .card-effects {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   button.primary-btn, button.secondary-btn {
     width: 100%;
     padding: 16px;
-    font-size: 18px;
+    font-size: 16px;
   }
 }
