@@ -17,6 +17,8 @@
         screen: 'ship',
         hearts: NS.CONSTANTS.STARTING_HEARTS,
         credits: 0,
+        backpack: [],
+        backpackCapacity: NS.CONSTANTS.BACKPACK_SLOTS_DEFAULT || 2,
         dungeon: null,
         combatIndex: 0,
 
@@ -40,6 +42,8 @@
     function startGame() {
         state.hearts = NS.CONSTANTS.STARTING_HEARTS;
         state.credits = 0;
+        state.backpack = [];
+        state.backpackCapacity = NS.CONSTANTS.BACKPACK_SLOTS_DEFAULT || 2;
         state.dungeon = null;
         state.combatIndex = 0;
         state.screen = 'ship';
@@ -53,6 +57,46 @@
 
     function closeEquipment() {
         state.screen = 'ship';
+    }
+
+    function openShop() {
+        state.screen = 'shop';
+    }
+
+    function closeShop() {
+        state.screen = 'ship';
+    }
+
+    function hasItem(itemId) {
+        return state.backpack.some(function(it) { return it.id === itemId; });
+    }
+
+    function canBuyHeart() {
+        var maxH = NS.CONSTANTS.MAX_HEARTS || NS.CONSTANTS.STARTING_HEARTS;
+        return state.credits >= NS.CONSTANTS.HEART_HEAL_COST && state.hearts < maxH;
+    }
+
+    function buyHeart() {
+        if (!canBuyHeart()) return false;
+        state.credits -= NS.CONSTANTS.HEART_HEAL_COST;
+        state.hearts++;
+        return true;
+    }
+
+    function canBuyItem(item) {
+        if (!item) return false;
+        if (state.credits < item.cost) return false;
+        if (state.backpack.length >= state.backpackCapacity) return false;
+        if (hasItem(item.id)) return false;
+        return true;
+    }
+
+    function buyItem(itemId) {
+        var item = (NS.PASSIVE_ITEMS || []).find(function(it) { return it.id === itemId; });
+        if (!item || !canBuyItem(item)) return false;
+        state.credits -= item.cost;
+        state.backpack.push(item);
+        return true;
     }
 
     function enterDungeon(starLevel) {
@@ -82,7 +126,8 @@
     function startMovement() {
         state.screen = 'movement';
         state.mHand = [];
-        state.mSum = 0;
+        // Effetto passivo Micro-Propulsore: parte con +1 movimento bonus
+        state.mSum = hasItem('micro_propulsore') ? 1 : 0;
         drawMovement(NS.CONSTANTS.MOVEMENT_DRAW);
     }
 
@@ -145,7 +190,15 @@
 
         var pool = state.dungeon.starLevel === 1 ? NS.ENEMIES.star1 : NS.ENEMIES.star2;
         var template = pool[Math.floor(Math.random() * pool.length)];
-        state.enemy = { name: template.name, hp: template.hp, maxHp: template.hp, damage: template.damage };
+        state.enemy = { 
+            id: template.id,
+            name: template.name, 
+            hp: template.hp, 
+            maxHp: template.hp, 
+            damage: template.damage, 
+            icon: template.icon || 'ri-aliens-fill',
+            type: template.type || 'Entità Ostile'
+        };
 
         // Usa le carte combat di default per il nuovo combattimento
         var decks = NS.Items.getDefaultDecks();
@@ -163,8 +216,19 @@
         state.playLimit = pattern.play + state.buffer;
         state.buffer = 0;
         state.playedThisTurn = 0;
-        
+
+        // Effetto passivo Deflettore Ausiliario: +1 scudo ad ogni turno
+        if (hasItem('deflettore_ausiliario')) {
+            state.playerShield += 1;
+        }
+
         drawCombat(pattern.draw);
+
+        // Effetto passivo Batteria di Riserva: +1 carta extra pescata al primo turno (turn 0)
+        if (state.turn === 0 && hasItem('batteria_riserva')) {
+            drawCombat(1);
+        }
+
         if (state.playerHP <= 0) loseCombat();
     }
 
@@ -245,7 +309,9 @@
     }
 
     function completeDungeon() {
-        state.credits += state.dungeon.credits;
+        // Effetto passivo Scanner Minerario: +5 crediti bonus
+        var bonus = hasItem('scanner_minerario') ? 5 : 0;
+        state.credits += (state.dungeon.credits + bonus);
         state.screen = 'victory';
     }
 
@@ -259,6 +325,13 @@
         startGame: startGame,
         openEquipment: openEquipment,
         closeEquipment: closeEquipment,
+        openShop: openShop,
+        closeShop: closeShop,
+        hasItem: hasItem,
+        canBuyHeart: canBuyHeart,
+        buyHeart: buyHeart,
+        canBuyItem: canBuyItem,
+        buyItem: buyItem,
         enterDungeon: enterDungeon,
         playMovementCard: playMovementCard,
         canAdvanceMovement: canAdvanceMovement,

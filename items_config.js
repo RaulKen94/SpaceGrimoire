@@ -39,7 +39,40 @@
         };
     }
 
+    // ============ OGGETTI PASSIVI (ZAINO) ============
+    NS.PASSIVE_ITEMS = [
+        {
+            id: 'deflettore_ausiliario',
+            name: 'Deflettore Ausiliario',
+            icon: '🛡️',
+            cost: 20,
+            description: 'All\'inizio di ogni turno di combattimento ottieni +1 Scudo automatico.'
+        },
+        {
+            id: 'micro_propulsore',
+            name: 'Micro-Propulsore',
+            icon: '👟',
+            cost: 15,
+            description: 'All\'inizio di ogni esplorazione dungeon parti con +1 Movimento bonus.'
+        },
+        {
+            id: 'batteria_riserva',
+            name: 'Batteria di Riserva',
+            icon: '🔋',
+            cost: 25,
+            description: 'Nel primo turno di ogni combattimento peschi +1 carta extra.'
+        },
+        {
+            id: 'scanner_minerario',
+            name: 'Scanner Minerario',
+            icon: '🪙',
+            cost: 20,
+            description: 'Completare con successo una missione dungeon conferisce +5 Crediti bonus.'
+        }
+    ];
+
     NS.Items = {
-        getDefaultDecks: getDefaultDecks
+        getDefaultDecks: getDefaultDecks,
+        passiveItems: NS.PASSIVE_ITEMS
     };
 })();
